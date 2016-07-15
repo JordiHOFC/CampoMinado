@@ -1,14 +1,10 @@
 :-[mina].
 
-/*Predicados que definem dimensões do tabuleiro.*/
-totalLinhas(Z):- Z is 5.
-totalColunas(Z):- Z is 5.
-
 /*Predicado para a incrementação de um valor N*/
 incremento(N, I) :- I is N+1.
 
 /*Predicado para verificar se posição está dentro do tabuleiro.*/
-posicaoValida(X,Y):- totalLinhas(A), totalColunas(B), X =< A, Y =< B.
+posicaoValida(X,Y):- tabuleiro(A), tabuleiro(B), X =< A, Y =< B.
 
 /*Predicado para somar quantidade de minas nos vizinhos. Para cada vizinho verifica se o mesmo possui
  mina, se possuir incrementa o total e passa o mesmo para o próximo vizinho.
@@ -44,19 +40,18 @@ criarAmbiente :- open('ambiente.pl',write, Stream), close(Stream).
 /*Predicados que escrevem no arquivo ambiente.pl os valores de cada posição sem mina.
 Começando na posição 1,1 iteramos o tabuleiro pelas linhas, caso a posição não tenha mina
 escrevemos no arquivo, senão passamos para a próxima posição (peça da direita) e testamos
-novamente. Ao chegar no fim de uma linha - quando o valor da coluna é 6 - pulamos para a
-próxima linha. Quando chegarmos no fim do tabuleiro - posicao 6,6, que está fora do
-tabuleiro - terminamos a recursão*/
+novamente. Ao chegar no fim de uma linha - quando o valor da coluna é tamanho do tabuleiro
+passado no arquivo mina.pl + 1 - pulamos para a próxima linha. Quando chegarmos no fim
+do tabuleiro - posicao tamanho + 1, tamanho + 1, que está fora do tabuleiro - terminamos a recursão*/
 popularAmbiente :- L is 1, C is 1, popularAmbiente(L, C).
-popularAmbiente(L, C) :- totalMinasVizinhas(L, C, Z), open('ambiente.pl',append, Stream), nl(Stream),
+popularAmbiente(L, C) :- T is C - 1, not(tabuleiro(T)), totalMinasVizinhas(L, C, Z), open('ambiente.pl',append, Stream), nl(Stream),
                          write(Stream, 'valor('), write(Stream, L), write(Stream, ','), write(Stream, C),
                          write(Stream, ','), write(Stream, Z), write(Stream, '). '), close(Stream),
                          incremento(C, NC), popularAmbiente(L, NC).
-popularAmbiente(L, 6) :- C is 1, incremento(L, NL),
+popularAmbiente(L, C) :- T is C - 1, tabuleiro(T), NC is 1, incremento(L, NL),
                          open('ambiente.pl',append, Stream), nl(Stream), close(Stream),
-                         popularAmbiente(NL, C).
+                         popularAmbiente(NL, NC).
 popularAmbiente(L, C) :- mina(L, C), incremento(C, NC), popularAmbiente(L, NC).
-popularAmbiente(6, 6).
 popularAmbiente(_, _).
 
 /*Predicado a ser chamado no inicio do programa. Chama o predicado que cria o ambiente
