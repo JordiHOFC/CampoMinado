@@ -9,8 +9,9 @@ Trabalho final da disciplina Inteligência Artificial do período 2016-1.
   Paloma Guenes Costa - 112221354 
 
 # Como jogar
-O tabuleiro possui 5 linhas e 5 colunas, as posições com minas do arquivo mina.pl
-não devem ultrapassar esses valores.
+A definição das dimensões do tabuleiro é dado pelo predicado tabuleiro(n), o
+tabuleiro será nxn. Esse predicado deve estar definido no arquivo mina.pl
+junto com as definições das posições das minas.
 
 1. Abra o terminal do swi-prolog no mesmo diretório onde estão os arquivos.
 
