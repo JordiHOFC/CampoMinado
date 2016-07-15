@@ -4,6 +4,7 @@
 totalLinhas(Z):- Z is 5.
 totalColunas(Z):- Z is 5.
 
+/*Predicado para a incrementação de um valor N*/
 incremento(N, I) :- I is N+1.
 
 /*Predicado para verificar se posição está dentro do tabuleiro.*/
@@ -37,8 +38,15 @@ adj7(_,_,W,Z):- Z is W.
 adj8(X,Y,W,Z):-A is X+1,B is Y-1, mina(A,B), Z is W+1.
 adj8(_,_,W,Z):- Z is W.
 
+/*Predicado que cria o arquivo ambiente.pl para a escrita*/
 criarAmbiente :- open('ambiente.pl',write, Stream), close(Stream).
 
+/*Predicados que escrevem no arquivo ambiente.pl os valores de cada posição sem mina.
+Começando na posição 1,1 iteramos o tabuleiro pelas linhas, caso a posição não tenha mina
+escrevemos no arquivo, senão passamos para a próxima posição (peça da direita) e testamos
+novamente. Ao chegar no fim de uma linha - quando o valor da coluna é 6 - pulamos para a
+próxima linha. Quando chegarmos no fim do tabuleiro - posicao 6,6, que está fora do
+tabuleiro - terminamos a recursão*/
 popularAmbiente :- L is 1, C is 1, popularAmbiente(L, C).
 popularAmbiente(L, C) :- totalMinasVizinhas(L, C, Z), open('ambiente.pl',append, Stream), nl(Stream),
                          write(Stream, 'valor('), write(Stream, L), write(Stream, ','), write(Stream, C),
@@ -51,4 +59,6 @@ popularAmbiente(L, C) :- mina(L, C), incremento(C, NC), popularAmbiente(L, NC).
 popularAmbiente(6, 6).
 popularAmbiente(_, _).
 
+/*Predicado a ser chamado no inicio do programa. Chama o predicado que cria o ambiente
+e o predicado que o popula.*/
 inicio :- criarAmbiente, popularAmbiente.
