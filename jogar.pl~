@@ -49,7 +49,6 @@ a escrevemos no arquivo, sinalizamos que o jogador perdeu o jogo e salvamos o ar
 a posição extrapola os limites do tabuleiro e apenas a ignoramos.*/
 posicao(X, Y) :- valor(X, Y, _), salvarJogada(X, Y), checarAjacentes(X, Y), ganhar.
 posicao(X, Y) :- mina(X, Y), salvarJogada(X, Y), perder, salvarArquivo.
-posicao(_,_) :- posicaoJaAberta.
 
 /*Os predicados adj* são divididos em 3 casos. O primeiro é o caso em que o valor da quantidade de minas adjacentes da posição é zero e checamos todos os
 seus adjacentes. O segundo caso é quando o valor das minas adjacentes não é zero e apenas a escrevemos no arquivo. Já o terceiro é o caso geral, que será 
